@@ -1,16 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('underscore');
-const counter = require('./counter');
+const counter = require('./counter.js');
 
 var items = {};
 
 // Public API - Fix these CRUD functions /// ////////////////////////////////////
 
 exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
+  // console.log('function', counter.getNextUniqueId);
+  counter.getNextUniqueId((err, data) => { 
+    var filePathName = path.join(exports.dataDir, `${data}.txt`);
+    fs.writeFile(filePathName, text, callback);  
+  });
 };
 
 exports.readAll = (callback) => {
