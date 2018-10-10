@@ -38,14 +38,21 @@ const writeCounter = (count, callback) => {
 
 // Public API - Fix this function //////////////////////////////////////////////
 exports.getNextUniqueId = (callback) => {
-  readCounter( (err, fileData) =>{
+  readCounter( (err, fileData) => {
     if (err) {
       let count = 0;
       writeCounter(count, callback);
     } else {
       let count = Number(fileData);
       count++;
-      writeCounter(count, callback);
+      writeCounter(count, (err, newID) => {
+        if (err) {
+          // throw ('error writing counter');
+          callback(err);
+        } else {
+          callback(null, newID);
+        }
+      });
     }
   });
 };
